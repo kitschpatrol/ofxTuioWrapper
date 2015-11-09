@@ -23,120 +23,121 @@
 #include "ofxTuioServer.h"
 
 ofxTuioServer::ofxTuioServer() {
-
 }
 
-//start Server (host, port);
-void  ofxTuioServer::start(char * host, int port){
-	verbose = false;
-//	if ((strcmp(host,"default")==0) && (port==0)) tuioServer = new TuioServer(new UdpSender);
-//	else tuioServer = new TuioServer(new UdpSender(host, port));
-	tuioServer = new TuioServer(host, port);
-	currentTime = TuioTime::getSessionTime();
+// start Server (host, port);
+void ofxTuioServer::start(char *host, int port) {
+  verbose = false;
+  //	if ((strcmp(host,"default")==0) && (port==0)) tuioServer = new TuioServer(new UdpSender);
+  //	else tuioServer = new TuioServer(new UdpSender(host, port));
+  tuioServer = new TuioServer(host, port);
+  currentTime = TuioTime::getSessionTime();
 }
-//add cursor, object
-TuioCursor * ofxTuioServer::addCursor(float _x, float _y){
-	if(verbose) cout<<"ofxTuioServer: TUIO Cursor added at x: "+ofToString(_x)+" y: "+ofToString(_y)<<endl;
-	return tuioServer->addTuioCursor(_x/ofGetWidth(), _y/ofGetHeight());
-}
-
-TuioObject * ofxTuioServer::addObject(int _sid, float _x, float _y, float _a){
-	return tuioServer->addTuioObject(_sid, _x/ofGetWidth(), _y/ofGetHeight(), _a);
+// add cursor, object
+TuioCursor *ofxTuioServer::addCursor(float _x, float _y) {
+  if (verbose)
+    cout << "ofxTuioServer: TUIO Cursor added at x: " + ofToString(_x) + " y: " + ofToString(_y) << endl;
+  return tuioServer->addTuioCursor(_x / ofGetWidth(), _y / ofGetHeight());
 }
 
-//update them
-void ofxTuioServer::updateCursor(TuioCursor * _tcur, float _nx, float _ny){
-	if(verbose) cout<<"ofxTuioServer: update TUIO Cursor " << _tcur->getCursorID() << " to x: "+ofToString(_nx)+" y: "+ofToString(_ny)<<endl;
-	tuioServer->updateTuioCursor(_tcur, _nx/ofGetWidth(), _ny/ofGetHeight());
+TuioObject *ofxTuioServer::addObject(int _sid, float _x, float _y, float _a) {
+  return tuioServer->addTuioObject(_sid, _x / ofGetWidth(), _y / ofGetHeight(), _a);
 }
 
-void ofxTuioServer::updateObject(TuioObject * _tobj, float _nx, float _ny, float _ang){
-	tuioServer->updateTuioObject(_tobj, _nx/ofGetWidth(), _ny/ofGetHeight(), _ang);
+// update them
+void ofxTuioServer::updateCursor(TuioCursor *_tcur, float _nx, float _ny) {
+  if (verbose)
+    cout << "ofxTuioServer: update TUIO Cursor " << _tcur->getCursorID() << " to x: " + ofToString(_nx) + " y: " + ofToString(_ny) << endl;
+  tuioServer->updateTuioCursor(_tcur, _nx / ofGetWidth(), _ny / ofGetHeight());
 }
 
-//remove them
-void ofxTuioServer::removeCursor(TuioCursor * _tcur){
-	if(verbose) cout<<"ofxTuioServer: remove TUIO Cursor " << _tcur->getCursorID()<<endl;
-	tuioServer->removeTuioCursor(_tcur);
+void ofxTuioServer::updateObject(TuioObject *_tobj, float _nx, float _ny, float _ang) {
+  tuioServer->updateTuioObject(_tobj, _nx / ofGetWidth(), _ny / ofGetHeight(), _ang);
 }
 
-void ofxTuioServer::removeObject(TuioObject * _tobj){
-	tuioServer->removeTuioObject(_tobj);
+// remove them
+void ofxTuioServer::removeCursor(TuioCursor *_tcur) {
+  if (verbose)
+    cout << "ofxTuioServer: remove TUIO Cursor " << _tcur->getCursorID() << endl;
+  tuioServer->removeTuioCursor(_tcur);
 }
 
-//Getters
-TuioTime ofxTuioServer::getCurrentTime(){
-	return tuioServer->getFrameTime();
+void ofxTuioServer::removeObject(TuioObject *_tobj) {
+  tuioServer->removeTuioObject(_tobj);
 }
 
-void ofxTuioServer::setVerbose(bool _b){
-	verbose = _b;
+// Getters
+TuioTime ofxTuioServer::getCurrentTime() {
+  return tuioServer->getFrameTime();
 }
 
-//send the OSC messages
+void ofxTuioServer::setVerbose(bool _b) {
+  verbose = _b;
+}
+
+// send the OSC messages
 void ofxTuioServer::run() {
-	//this is weird, it should actually be something like....
-	tuioServer->stopUntouchedMovingCursors();
-	tuioServer->commitFrame();
-	currentTime = TuioTime::getSessionTime();
-	tuioServer->initFrame(currentTime);
-	//...this:
-	/*
-	currentTime = TuioTime::getSessionTime();
-	tuioServer->initFrame(currentTime);
-	tuioServer->stopUntouchedMovingCursors();
-	tuioServer->commitFrame();
-	*/
+  // this is weird, it should actually be something like....
+  tuioServer->stopUntouchedMovingCursors();
+  tuioServer->commitFrame();
+  currentTime = TuioTime::getSessionTime();
+  tuioServer->initFrame(currentTime);
+  //...this:
+  /*
+  currentTime = TuioTime::getSessionTime();
+  tuioServer->initFrame(currentTime);
+  tuioServer->stopUntouchedMovingCursors();
+  tuioServer->commitFrame();
+  */
 
-	//propably due to the order of which OF handles mouse and keyboard events
+  // propably due to the order of which OF handles mouse and keyboard events
 }
 
-//draw them for debug purposes
+// draw them for debug purposes
 void ofxTuioServer::drawCursors() {
-	char id[3];
-	// draw the cursors
-	std::list<TuioCursor*> cursorList = tuioServer->getTuioCursors();
-	for (std::list<TuioCursor*>::iterator tuioCursor = cursorList.begin(); tuioCursor!=cursorList.end(); tuioCursor++) {
-		TuioCursor * tcur = (*tuioCursor);
-		std::list<TuioPoint> path = tcur->getPath();
-		if (path.size()>0) {
+  char id[3];
+  // draw the cursors
+  std::list<TuioCursor *> cursorList = tuioServer->getTuioCursors();
+  for (std::list<TuioCursor *>::iterator tuioCursor = cursorList.begin(); tuioCursor != cursorList.end(); tuioCursor++) {
+    TuioCursor *tcur = (*tuioCursor);
+    std::list<TuioPoint> path = tcur->getPath();
+    if (path.size() > 0) {
 
-			TuioPoint last_point = path.front();
-			glBegin(GL_LINES);
-			glColor3f(0.0, 0.0, 1.0);
+      TuioPoint last_point = path.front();
+      glBegin(GL_LINES);
+      glColor3f(0.0, 0.0, 1.0);
 
-			for (std::list<TuioPoint>::iterator point = path.begin(); point!=path.end(); point++) {
-				glVertex3f(last_point.getX()*ofGetWidth(), last_point.getY()*ofGetHeight(), 0.0f);
-				glVertex3f(point->getX()*ofGetWidth(), point->getY()*ofGetHeight(), 0.0f);
-				last_point.update(point->getX(),point->getY());
-			}
-			glEnd();
+      for (std::list<TuioPoint>::iterator point = path.begin(); point != path.end(); point++) {
+        glVertex3f(last_point.getX() * ofGetWidth(), last_point.getY() * ofGetHeight(), 0.0f);
+        glVertex3f(point->getX() * ofGetWidth(), point->getY() * ofGetHeight(), 0.0f);
+        last_point.update(point->getX(), point->getY());
+      }
+      glEnd();
 
-			// draw the finger tip
-			glColor3f(0.0, 0.75, 0.75);
-			ofCircle(tcur->getX()*ofGetWidth(), tcur->getY()*ofGetHeight(), 10);
-		}
-	}
+      // draw the finger tip
+      glColor3f(0.0, 0.75, 0.75);
+      ofDrawCircle(tcur->getX() * ofGetWidth(), tcur->getY() * ofGetHeight(), 10);
+    }
+  }
 }
 
-void ofxTuioServer::drawObjects(){
-    std::list<TuioObject*> objectList = tuioServer->getTuioObjects();
-	list<TuioObject*>::iterator tobj;
+void ofxTuioServer::drawObjects() {
+  std::list<TuioObject *> objectList = tuioServer->getTuioObjects();
+  list<TuioObject *>::iterator tobj;
 
-	for (tobj=objectList.begin(); tobj != objectList.end(); tobj++) {
-		TuioObject *obj = (*tobj);
-		glColor3f(1.0,0.0,0.0);
-		glPushMatrix();
-		glTranslatef(obj->getX()*ofGetWidth(), obj->getY()*ofGetHeight(), 0.0);
-		glRotatef(obj->getAngleDegrees(), 0.0, 0.0, 1.0);
-		ofRect(-10.0, -10.0, 20.0, 20.0);
-		glColor3f(1.0,1.0,1.0);
-		ofLine(0, 0, 0, -10);
-		glPopMatrix();
-		string str = "SymbolId: "+ofToString((int)(obj->getSymbolID()));
-		ofDrawBitmapString(str, obj->getX()*ofGetWidth()-10.0, obj->getY()*ofGetHeight()+25.0);
-		str = "SessionId: "+ofToString((int)(obj->getSessionID()));
-		ofDrawBitmapString(str, obj->getX()*ofGetWidth()-10.0, obj->getY()*ofGetHeight()+40.0);
-	}
-
+  for (tobj = objectList.begin(); tobj != objectList.end(); tobj++) {
+    TuioObject *obj = (*tobj);
+    glColor3f(1.0, 0.0, 0.0);
+    glPushMatrix();
+    glTranslatef(obj->getX() * ofGetWidth(), obj->getY() * ofGetHeight(), 0.0);
+    glRotatef(obj->getAngleDegrees(), 0.0, 0.0, 1.0);
+    ofDrawRectangle(-10.0, -10.0, 20.0, 20.0);
+    glColor3f(1.0, 1.0, 1.0);
+    ofDrawLine(0, 0, 0, -10);
+    glPopMatrix();
+    string str = "SymbolId: " + ofToString((int)(obj->getSymbolID()));
+    ofDrawBitmapString(str, obj->getX() * ofGetWidth() - 10.0, obj->getY() * ofGetHeight() + 25.0);
+    str = "SessionId: " + ofToString((int)(obj->getSessionID()));
+    ofDrawBitmapString(str, obj->getX() * ofGetWidth() - 10.0, obj->getY() * ofGetHeight() + 40.0);
+  }
 }

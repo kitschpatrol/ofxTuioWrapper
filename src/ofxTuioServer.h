@@ -35,36 +35,36 @@ using namespace TUIO;
 class ofxTuioServer {
 
 public:
-	ofxTuioServer();
-	~ofxTuioServer() {
-		delete tuioServer;
-	};
+  ofxTuioServer();
+  ~ofxTuioServer() {
+    delete tuioServer;
+  };
 
-	void start(char * _host, int _port);
-	TuioCursor * addCursor(float _x, float _y);
-	TuioObject * addObject(int _sid, float _x, float _y, float _a);
+  void start(char *_host, int _port);
+  TuioCursor *addCursor(float _x, float _y);
+  TuioObject *addObject(int _sid, float _x, float _y, float _a);
 
-	void updateCursor(TuioCursor * _tcur, float _nx, float _ny);
-	void updateObject(TuioObject * _tobj, float _nx, float _ny, float _ang);
+  void updateCursor(TuioCursor *_tcur, float _nx, float _ny);
+  void updateObject(TuioObject *_tobj, float _nx, float _ny, float _ang);
 
-	void removeCursor(TuioCursor * _tcur);
-	void removeObject(TuioObject * _tobj);
+  void removeCursor(TuioCursor *_tcur);
+  void removeObject(TuioObject *_tobj);
 
-	void drawCursors();
-	void drawObjects();
+  void drawCursors();
+  void drawObjects();
 
-	void setVerbose(bool _b);
-	TuioTime getCurrentTime();
+  void setVerbose(bool _b);
+  TuioTime getCurrentTime();
 
-	void run();
+  void run();
 
-	//This is public so you can also access all the functionality of the official TUIO c++ client that does not get wrapped!!
-	//I only wrapped the functions where screencoordinates need to be put in a range from 0 to 1 ect.
-	TuioServer * tuioServer;
+  // This is public so you can also access all the functionality of the official TUIO c++ client that does not get wrapped!!
+  // I only wrapped the functions where screencoordinates need to be put in a range from 0 to 1 ect.
+  TuioServer *tuioServer;
 
 private:
-	bool verbose;
-	TuioTime currentTime;
+  bool verbose;
+  TuioTime currentTime;
 };
 
 #endif /* INCLUDED_ofxTuioServer_H */
