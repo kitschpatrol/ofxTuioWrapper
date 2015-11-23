@@ -450,15 +450,17 @@ void TuioClient::ProcessPacket( const char *data, int size, const IpEndpointName
 
 void TuioClient::connect(bool lk) {
 
-#ifndef WIN32	
+#ifndef WIN32
 	/*pthread_mutexattr_settype(&attr_p, PTHREAD_MUTEX_RECURSIVE);
 	pthread_mutex_init(&cursorMutex,&attr_p);
 	pthread_mutex_init(&objectMutex,&attr_p);*/
 	pthread_mutex_init(&cursorMutex,NULL);
 	pthread_mutex_init(&objectMutex,NULL);	
 #else
-	cursorMutex = CreateMutex(NULL,FALSE,"cursorMutex");
-	objectMutex = CreateMutex(NULL,FALSE,"objectMutex");
+	// http://stackoverflow.com/a/3925049
+	// Project Properties --> Configuration Properties --> General --> Character Set --> Not Set
+	cursorMutex = CreateMutex(NULL,FALSE,L"cursorMutex");
+	objectMutex = CreateMutex(NULL,FALSE, L"objectMutex");
 #endif		
 		
 	if (socket==NULL) return;

@@ -20,7 +20,9 @@
 */
 
 #include "TuioServer.h"
+#ifndef WIN32
 #include "unistd.h"
+#endif
 
 using namespace TUIO;
 using namespace osc;
@@ -190,6 +192,7 @@ void TuioServer::initialize(const char *host, int port, int size) {
 	verbose = updateObject = updateCursor = false;
 	lastObjectUpdate = lastCursorUpdate = currentFrameTime.getSeconds();
 	
+
 	sendEmptyCursorBundle();
 	sendEmptyObjectBundle();
 
