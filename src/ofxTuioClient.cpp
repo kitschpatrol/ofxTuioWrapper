@@ -58,7 +58,7 @@ void ofxTuioClient::drawCursors() {
     TuioCursor *cur = (*tit);
     // if(tcur!=0){
     // TuioCursor cur = *tcur;
-    ofSetColor(0.0, 0.0, 0.0);
+    ofSetColor(255);
     ofDrawEllipse(cur->getX() * ofGetWidth(), cur->getY() * ofGetHeight(), 10.0, 10.0);
     string str = "SessionId: " + ofToString((int)(cur->getSessionID()));
     ofDrawBitmapString(str, cur->getX() * ofGetWidth() - 10.0, cur->getY() * ofGetHeight() + 25.0);
